@@ -39,5 +39,4 @@ export function renderPhotos(arr, photoList, gallery) {
     photoList.insertAdjacentHTML("beforeend", markup);
 
     gallery.refresh();
-
 }

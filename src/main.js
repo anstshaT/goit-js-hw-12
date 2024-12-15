@@ -10,7 +10,6 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 
-
 const form = document.querySelector('.search-form');
 const input = form.querySelector('#searchInput');
 const photoList = document.querySelector('.gallery');
@@ -26,39 +25,40 @@ function hideLoader() {
 }
 
 
-form.addEventListener("submit", (evt) => {
+form.addEventListener("submit", async (evt) => {
         evt.preventDefault();
         showLoader();
         const query = input.value;
     
         if(query.trim() === "") {
             console.log("Input is empty");
-            
             return;
         }
-    
-        fetchFunction(query)
-        .then((photos) => {
-            console.log(photos);
-            if (photos.hits.length === 0) {
-                iziToast.error({
-                    message: 'Sorry, there are no images matching your search query. Please try again!',
-                    theme: "dark",
-                    backgroundColor: "red",
-                    messageColor: "white",
-                    messageSize: "16px",
-                    position: "topRight"
-                });
-                return;
-            }
+            
+    try {
+        const photos = await fetchFunction(query)
+        console.log(fetchFunction(query));
+        
+            
+        if (photos.hits.length === 0) {
+            iziToast.error({
+                message: 'Sorry, there are no images matching your search query. Please try again!',
+                theme: "dark",
+                backgroundColor: "red",
+                messageColor: "white",
+                messageSize: "16px",
+                position: "topRight"
+            });
+            return;
+        }
 
-            renderPhotos(photos.hits, photoList, gallery);
-            })
-        .catch((error) => console.log(error))
-        .finally(() => {
+        renderPhotos(photos.hits, photoList, gallery);
+    } catch (error) {
+            console.log(error.message)
+    } finally {
             hideLoader()
             evt.target.reset()
-        })
+        }
 })
 
 let gallery = new SimpleLightbox('.gallery .gallery-link', {
