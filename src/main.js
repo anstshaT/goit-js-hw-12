@@ -1,4 +1,4 @@
-import { renderPhotos } from "./js/render-function";
+import { renderPhotos } from "./js/render-functions";
 import { fetchFunction } from "./js/pixabay-api";
 
 // Повідомлення
