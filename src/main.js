@@ -147,7 +147,7 @@ function smoothScroll() {
 
     if (image) {
         const imageHeight = image.getBoundingClientRect().height;
-        const scrollHeight = imageHeight * 3.5;
+        const scrollHeight = imageHeight * 4;
 
         console.log(imageHeight);
         console.log(scrollHeight);
