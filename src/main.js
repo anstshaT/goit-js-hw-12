@@ -43,9 +43,16 @@ form.addEventListener("submit", async (evt) => {
     evt.preventDefault();
     showLoader();
     const newQuery = input.value.trim();
+    photoList.innerHTML = "";
     
         if(newQuery === "") {
             console.log("Input is empty");
+            iziToast.info({
+                    message: 'Input is empty',
+                    messageSize: "16px",
+                    position: "topRight"
+            });
+            hideLoader();
             return;
         }
         
@@ -68,15 +75,28 @@ form.addEventListener("submit", async (evt) => {
                 messageSize: "16px",
                 position: "topRight"
             });
+
+            photoList.innerHTML = "";
+            evt.target.reset();
             return;
         }
 
         renderPhotos(photos.hits, photoList, gallery);
         loadMoreBtn.classList.remove('disable');
     } catch (error) {
-            console.log(error.message)
+        console.log(error.message);
+        iziToast.error({
+                    message: error.message,
+                    theme: "dark",
+                    backgroundColor: "red",
+                    messageColor: "white",
+                    messageSize: "16px",
+                    position: "topRight"
+                });
+                hideLoader();
     } finally {
-            hideLoader()
+        hideLoader()
+        
         }
 })
 
@@ -112,6 +132,15 @@ async function onLoadBtn() {
         smoothScroll();
     } catch (error) {
         console.log(error.message);
+        iziToast.error({
+                    message: error.message,
+                    theme: "dark",
+                    backgroundColor: "red",
+                    messageColor: "white",
+                    messageSize: "16px",
+                    position: "topRight"
+                });
+                hideLoaderMore();
     } finally {
         hideLoaderMore();
         loadMoreBtn.classList.remove('disable');
