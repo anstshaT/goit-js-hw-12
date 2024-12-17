@@ -82,7 +82,7 @@ form.addEventListener("submit", async (evt) => {
         }
 
         renderPhotos(photos.hits, photoList, gallery);
-        loadMoreBtn.classList.remove('disable');
+        checkLastPage(photos.totalHits);
     } catch (error) {
         console.log(error.message);
         iziToast.error({
@@ -121,14 +121,7 @@ async function onLoadBtn() {
         const data = await fetchFunction(newQuery, pageNumber, perPage);
         photoList.insertAdjacentHTML("beforeend", renderPhotos(data.hits, photoList, gallery));
         console.log(data.hits);
-        if (data.totalHits / perPage < pageNumber) {
-            return iziToast.info({
-                title: "We're sorry,",
-                message: "but you've reached the end of search results.",
-                position: 'topRight'
-            });
-        }
-
+        checkLastPage(data.totalHits);
         smoothScroll();
     } catch (error) {
         console.log(error.message);
@@ -154,12 +147,28 @@ function smoothScroll() {
 
     if (image) {
         const imageHeight = image.getBoundingClientRect().height;
-        const scrollHeight = imageHeight * 2;
+        const scrollHeight = imageHeight * 3.5;
+
+        console.log(imageHeight);
+        console.log(scrollHeight);
 
         window.scrollBy({
             top: scrollHeight,
             left: 0,
             behavior: 'smooth'
         });
+    }
+}
+
+function checkLastPage(totalHits) {
+    if (totalHits <= perPage * pageNumber) {
+        loadMoreBtn.classList.add('disable');
+        return iziToast.info({
+                title: "We're sorry,",
+                message: "but you've reached the end of search results.",
+                position: 'topRight'
+            });
+    } else {
+        loadMoreBtn.classList.remove('disable')
     }
 }
